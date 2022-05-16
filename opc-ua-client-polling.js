@@ -21,14 +21,10 @@ function getAirConditionersData() {
 
 async function pollAirConditionersData() {
     try {
-        await client.connect(endpointUrl);
-        session = await client.createSession();
-
-        // console.log("Test view from Root");
-        // let browseResult = await session.browse("RootFolder");
-        // for (let reference of browseResult.references) {
-        //     console.log(reference.browseName.toString(), reference.nodeId.toString())
-        // };
+        if (!session) { 
+            await client.connect(endpointUrl);
+            session = await client.createSession();
+        }
 
         setInterval(async () => {
             let temper_1 = (await session.read({ nodeId: nodeIdsConfig[0]['temperature'] })).value.value;
@@ -40,12 +36,17 @@ async function pollAirConditionersData() {
             airConditionersData[0]['humidity'] = humid_1.toFixed(2);
             airConditionersData[1]['temperature'] = temper_2.toFixed(2);
             airConditionersData[1]['humidity'] = humid_2.toFixed(2);
-            console.log(airConditionersData);
+            //console.log(airConditionersData);
         }, 1000);
-    } catch (e) {
+    } catch (e){
         console.log(e);
     }
 } 
 
-pollAirConditionersData();
+module.exports = {
+	startOPCUAService: () => {
+		pollAirConditionersData()
+	},
+	getAirConditionersData: getAirConditionersData
+}
 

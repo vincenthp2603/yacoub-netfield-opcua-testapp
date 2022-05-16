@@ -1,0 +1,10 @@
+{
+    "version": 0,
+
+    "tools": {
+        "pinger": {
+            "label": "OPC UA: Air Conditioner",
+            "path": "index.html"
+        }
+    }
+}
